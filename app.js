@@ -29,7 +29,7 @@ const htmlContent = `
 app.get('/list', (req, res) => {
     res.send(htmlContent);
   });
-  const url = 'http://localhost:3010/list';
+  const url = 'https://baturqr.onrender.com/list';
 
 const base64Html = Buffer.from(htmlContent).toString('base64');
 
