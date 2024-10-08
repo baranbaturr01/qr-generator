@@ -34,21 +34,32 @@ app.get('/list', (req, res) => {
 const base64Html = Buffer.from(htmlContent).toString('base64');
 
 const dataUrl = `data:text/html;base64,${base64Html}`;
-QrCode.toDataURL(url, (err, src) => {
-    if (err) {
-      console.error('Error generating QR Code', err);
-      return;
-    }
+
+app.get('/show-qr', (req, res) => {
+    // targetUrl URL'sinden QR kod oluştur
+    QrCode.toDataURL(url, (err, src) => {
+      if (err) {
+        console.error('Error generating QR Code', err);
+        res.send('Error generating QR Code');
+        return;
+      }
   
-    // QR kodun çıktısını konsola bas
-    console.log('QR Code Data URL:', src);
-  
-    // QR kodu bir PNG dosyasına kaydet
-    const fs = require('fs');
-    const base64Data = src.replace(/^data:image\/png;base64,/, '');
-    fs.writeFile('qrcode.png', base64Data, 'base64', (err) => {
-      if (err) console.error('Error writing file', err);
-      else console.log('QR code saved as qrcode.png');
+      // QR kodu gösteren HTML sayfasını döndür
+      res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Scan QR Code</title>
+        </head>
+        <body>
+            <h1>Scan this QR Code</h1>
+            <img src="${src}" alt="QR Code" />
+            <p>Bu QR kodu taradığınızda listeyi göreceksiniz.</p>
+        </body>
+        </html>
+      `);
     });
   });
   
